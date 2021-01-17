@@ -18,8 +18,8 @@ p = device.create_pipeline(config={
     "streams": ["previewout", "object_tracker"],
     "ai": {
         #blob compiled for maximum 12 shaves
-        "blob_file": "/home/pi/depthai/depthai/resources/nn/mobilenet-ssd/mobilenet-ssd.blob.sh12cmx12NCE1",
-        "blob_file_config": "/home/pi/depthai/depthai/resources/nn/mobilenet-ssd/mobilenet-ssd.json",
+        "blob_file": "/home/pi/depthai/resources/nn/mobilenet-ssd/mobilenet-ssd.blob.sh12cmx12NCE1",
+        "blob_file_config": "/home/pi/depthai/resources/nn/mobilenet-ssd/mobilenet-ssd.json",
         "shaves" : 12,
         "cmx_slices" : 12,
         "NN_engines" : 1,
@@ -81,7 +81,7 @@ while True:
                     pass
                 else:
                     startTime = datetime.datetime.now()
-                    print("Start: %d %s %s" % (i,tlabel,startTime)) # new motion seen after some gap
+                    print("Start: %d %s %s" % (i,tlabel,startTime),end="",flush=True) # new motion seen after some gap
                     
                 idleTime = 0  # if we did see something, reset idle time
 
@@ -89,7 +89,7 @@ while True:
             if (idleTime == 1):
                 endTime = datetime.datetime.now()
                 duration = (endTime - startTime).total_seconds() # seconds
-                print("          End: %d" % duration)
+                print(" End: %d" % duration)
 
 
     if cv2.waitKey(1) == ord('q'):
