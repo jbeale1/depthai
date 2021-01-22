@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 # https://github.com/luxonis/depthai-python/tree/gen2_develop/examples
-# mods J.Beale 2021-01-21
+# mods: J.Beale 2021-01-22
+# detect only "person" type, print confidence %
 
 from pathlib import Path
 import sys
@@ -48,6 +49,9 @@ detection_nn.out.link(xout_nn.input)
 device = dai.Device(pipeline)
 device.startPipeline()
 
+
+# dai.AutofocusMode(AF_MODE_CONTINUOUS_VIDEO)  # set AF not too fast
+
 # Output queues will be used to get the rgb frames and nn data from the outputs defined above
 q_rgb = device.getOutputQueue(name="rgb", maxSize=4, blocking=False)
 q_nn = device.getOutputQueue(name="nn", maxSize=4, blocking=False)
@@ -84,7 +88,10 @@ while True:
         # filter out the results which confidence less than a defined threshold
         # also, select out just the x1,y1,x2,y2 coords
         bboxes = bboxes[bboxes[:, 1] == 15]  # just people
-        bboxes = bboxes[bboxes[:, 2] > minConfidence][:, 3:7]
+        bboxes = bboxes[bboxes[:, 2] > minConfidence]
+        for box in bboxes:
+            print("%04.2f" % (box[2]))  # DEBUG
+        bboxes = bboxes[:, 3:7]  # select just the x1,y1 x2,y2 coords
 
     if frame is not None:
         # if the frame is available, draw bounding boxes on it and show the frame
